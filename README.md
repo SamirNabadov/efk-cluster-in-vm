@@ -17,6 +17,7 @@ Infrastructur INFO
 * 2 client node and kibana (Configured on the 2nd client node)
 * 3 master node
 * 4 data node
+* Parameters of nodes: CPU 8 / RAM 16
 * requests routed to kibana(UI searching logs) and client node(for writing-fluentd) with dns based load balancing
 
 
