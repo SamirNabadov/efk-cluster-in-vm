@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: {{ k8s_namespace }}
+data:
+  fluent.conf: |
+    <match **>
+      @type elasticsearch
+      @log_level info
+      include_tag_key true
+      host {{groups["coordinating"][0]}}
+      port 9200
+      scheme "#{ENV['FLUENT_ELASTICSEARCH_SCHEME'] || 'http'}"
+      ssl_verify "#{ENV['FLUENT_ELASTICSEARCH_SSL_VERIFY'] || 'false'}"
+      reload_connections true
+      logstash_format true
+      logstash_dateformat %Y.%m.%d
+      logstash_prefix {{ k8s_namespace }}
+      <inject>
+        time_key timestamp
+        time_type string
+        time_format %Y-%m-%dT%H:%M:%S.%NZ
+        tag_key fluentd_tag
+      </inject>
+    </match>

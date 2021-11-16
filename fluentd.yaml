@@ -1,0 +1,27 @@
+---
+- name: Installation fluentd
+  hosts: k8s-cluster-node
+  vars_files:
+    - vars/vars.yaml
+  tasks:
+    - name: Install kube-fluentd-operator in k8s cluster
+      command: "{{ helm_binary }} upgrade --install kfo {{ KFO_CHART_URL }} --set rbac.create=true --set image.tag={{ kfo_version }} --set image.repository={{ kfo_image }} -n {{ kfo_namespace }}"
+      changed_when: false
+      run_once: yes
+
+    - name: Wait for metallb-controller to be ready
+      command: "{{ kubectl_binary }} -n {{ kfo_namespace }} --kubeconfig {{ kube_config }} rollout status daemonset/kfo-log-router"
+      changed_when: false
+      run_once: yes
+
+    - name: Copy fluentd config to k8s node
+      template:
+        src: fluentd_config.j2
+        dest: "{{ home_path }}/fluentd_config.yaml"
+      run_once: yes
+
+    - name: Install fluend configmap
+      command: "{{ kubectl_binary }} --kubeconfig {{ kube_config }} apply -f {{ home_path }}/fluentd_config.yaml"
+      changed_when: false
+      run_once: yes
+

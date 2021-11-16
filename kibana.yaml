@@ -1,0 +1,36 @@
+---
+- name: Installation Kibana
+  hosts: elk-c02.local.az
+  vars_files:
+    - vars/vars.yaml
+  tasks:
+    - name: Kibana RPM install with yum module
+      yum: 
+        name: "{{ KIBANA_RPM_URL }}"
+    
+    - name: Copy kibana template file to remote machine
+      template:
+        src: kibana_config.j2
+        dest: "{{ kibana_config }}"
+      notify:
+        - restart kibana service
+
+    - name: Daemon reload
+      systemd:
+        daemon_reload: yes
+
+    - name: Start and Enable kibana service
+      service:
+        name: "{{ kibana_service }}"
+        state: started
+        enabled: true
+    
+  handlers:
+    - name: restart kibana service
+      service:
+        name: "{{ kibana_service }}"
+        state: restarted
+    
+
+
+

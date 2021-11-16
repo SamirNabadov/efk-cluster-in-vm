@@ -1,0 +1,36 @@
+[hosts]
+elk-m01.local.az ansible_host=192.168.1.101
+elk-m02.local.az ansible_host=192.168.1.102
+elk-m03.local.az ansible_host=192.168.1.103
+elk-c01.local.az ansible_host=192.168.1.104
+elk-c02.local.az ansible_host=192.168.1.105
+elk-w01.local.az ansible_host=192.168.1.106
+elk-w02.local.az ansible_host=192.168.1.107
+elk-w03.local.az ansible_host=192.168.1.108
+elk-w04.local.az ansible_host=192.168.1.109
+k8s-w01.local.az ansible_host=192.168.1.201
+
+[masters]
+elk-m01.local.az
+elk-m02.local.az
+elk-m03.local.az
+ 
+[data]
+elk-w01.local.az
+elk-w02.local.az
+elk-w03.local.az
+elk-w04.local.az
+
+[coordinating]
+elk-c01.local.az
+elk-c02.local.az
+
+[k8s-cluster-node]
+k8s-m01.local.az
+
+[logging:children]
+masters
+data
+coordinating
+ 
+

@@ -1,0 +1,20 @@
+
+#Variables
+
+KFO_CHART_URL: 'https://github.com/vmware/kube-fluentd-operator/releases/download/v1.16.1/log-router-0.4.0.tgz'
+KIBANA_RPM_URL: 'https://artifacts.elastic.co/downloads/kibana/kibana-7.13.1-x86_64.rpm'
+
+kibana_config: /etc/kibana/kibana.yml
+kibana_service: kibana
+
+kfo_namespace: default
+kfo_version: v1.16.1
+kfo_image: vmware/kube-fluentd-operator
+
+helm_binary: /usr/local/bin/helm
+kubectl_binary: /usr/local/bin/kubectl
+
+kube_config: "/home/ansible/.kube/config"
+home_path: /home/ansible
+
+k8s_namespace: prod

@@ -1,0 +1,64 @@
+- hosts: masters, data, coordinating
+  tasks:
+    - name: Update the /etc/hosts file with node names
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '.*{{ item }}$'
+        line: "{{ hostvars[item].ansible_host }} {{item}}"
+        state: present
+      when: 
+        - hostvars[item].ansible_host is defined
+      loop: "{{ groups.all }}"
+
+- hosts: masters
+  roles:
+   - role: elastic.elasticsearch
+  vars:
+   es_heap_size: "4g"
+   es_config:
+     cluster.name: "logging"
+     network.host: 0
+     cluster.initial_master_nodes: '"{{groups["masters"][0]}},{{groups["masters"][1]}},{{groups["masters"][2]}}"'
+     discovery.seed_hosts: '"{{groups["masters"][0]}}:9300,{{groups["masters"][1]}}:9300,{{groups["masters"][2]}}:9300"'
+     http.port: 9200
+     node.data: false
+     node.master: true
+     node.ingest: false
+     node.ml: false
+     cluster.remote.connect: true
+     bootstrap.memory_lock: true
+
+- hosts: data
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_data_dirs:
+      - "/var/lib/elasticsearch"
+    es_heap_size: "8g"
+    es_config:
+      cluster.name: "logging"
+      network.host: 0
+      discovery.seed_hosts: '"{{groups["masters"][0]}}:9300,{{groups["masters"][1]}}:9300,{{groups["masters"][2]}}:9300"'   
+      http.port: 9200
+      node.data: true
+      node.master: false
+      node.ml: false
+      bootstrap.memory_lock: true
+      indices.recovery.max_bytes_per_sec: 100mb
+
+- hosts: coordinating
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_heap_size: "4g"
+    es_config:
+      cluster.name: "logging"
+      network.host: 0
+      discovery.seed_hosts: '"{{groups["masters"][0]}}:9300,{{groups["masters"][1]}}:9300,{{groups["masters"][2]}}:9300"'
+      http.port: 9200
+      node.data: false
+      node.master: false
+      node.ingest: false
+      node.ml: false
+      cluster.remote.connect: true
+      bootstrap.memory_lock: true
