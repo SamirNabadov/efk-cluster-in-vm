@@ -24,8 +24,8 @@ Infrastructur INFO
 Basic settings
 ------------
 * Installing and Configuring EFK cluster
-* Configured KFO (Kubernetes-Fluentd-operator) in Kubernetes cluster
-* Configured Fluentd configmap for prod namespace in Kubernetes cluster
+* Configuring KFO (Kubernetes-Fluentd-operator) in Kubernetes cluster
+* Configuring Fluentd configmap for prod namespace in Kubernetes cluster
 
 
 Currently tested on these Operating Systems
