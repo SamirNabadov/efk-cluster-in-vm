@@ -9,7 +9,7 @@
       changed_when: false
       run_once: yes
 
-    - name: Wait for metallb-controller to be ready
+    - name: Wait for kube-fluentd-operator to be ready
       command: "{{ kubectl_binary }} -n {{ kfo_namespace }} --kubeconfig {{ kube_config }} rollout status daemonset/kfo-log-router"
       changed_when: false
       run_once: yes
