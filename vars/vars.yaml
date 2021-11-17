@@ -7,7 +7,7 @@ KIBANA_RPM_URL: 'https://artifacts.elastic.co/downloads/kibana/kibana-7.13.1-x86
 kibana_config: /etc/kibana/kibana.yml
 kibana_service: kibana
 
-kfo_namespace: default
+kfo_namespace: kube-system
 kfo_version: v1.16.1
 kfo_image: vmware/kube-fluentd-operator
 
